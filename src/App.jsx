@@ -4,6 +4,8 @@ import { Filter } from 'components/Filter/Filter';
 import {ContactList } from 'components/ContactList/ContactList';
 import { Container, Title, Subtitle} from './App.styled';
 
+const LS_KEY = 'contacts';
+
 export class App extends React.Component { 
     state = {
         contacts: [
@@ -14,6 +16,17 @@ export class App extends React.Component {
         ],
         filter: '',
     };
+
+    componentDidMount() { 
+        const dataNumbers = localStorage.getItem(LS_KEY);
+
+        if (dataNumbers) { this.setState({ contacts: JSON.parse(dataNumbers) }); }
+
+    }
+
+    componentDidUpdate() { 
+        localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
+    }
 
     onSubmit = data => { 
         this.setState(({ contacts }) => contacts.find(contact => contact.name === data.name) ? alert(`${data.name} is already in contacts`) : { contacts: [data, ...contacts] });
